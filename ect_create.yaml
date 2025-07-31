@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - name: start an instance with public IP address
+    amazon.aws.ec2_instance:
+      name: "item.name"
+      keyname: "key_of_the_pem"
+      #vpc_subnet_id: subnet-....
+      instance_type: t2.micro
+      security_group: default
+      region: us-east-1
+      aws_access_key: "{{ec2_access_key}}" #from vault as defined
+      aws_secrect_key: "{{ec2_secret_key}}" #from vault as defined
+      network:
+        assign_public_ip: true
+      image_id: "{{item.image}}"
+      tags: 
+        Environment: Testing
+
+    loop:
+      - { image: "", name: "" } #write ami-id-here
+      - { image: "", name: "" } 
+      - { image: "", name: "" }
+
+
+      # to run this file just do 
+      # ansible-playbook <file-name.yaml> --vault-password-file vault.pass
